@@ -1,0 +1,7 @@
+{
+  "name": "nequi-frontend-test",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
