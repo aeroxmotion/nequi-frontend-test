@@ -57,3 +57,5 @@ $ ionic capacitor run ios
 ```
 
 ## 4. Descargables
+
+- [Android APK](https://github.com/aeroxmotion/nequi-frontend-test/raw/main/downloads/demo-todo-app-nequi.apk)
