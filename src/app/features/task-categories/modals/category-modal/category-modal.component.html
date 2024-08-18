@@ -31,6 +31,24 @@
           {{ category ? 'Guardar' : 'Añadir' }} categoría
         </ion-button>
       </ion-item>
+
+      <ion-item *ngIf="category">
+        <ion-button
+          size="default"
+          shape="round"
+          color="danger"
+          fill="clear"
+          [style.width]="'100%'"
+        >
+          <ion-icon
+            ios="trash-outline"
+            android="trash-sharp"
+            slot="end"
+          ></ion-icon>
+
+          Eliminar
+        </ion-button>
+      </ion-item>
     </ion-list>
   </form>
 </ion-content>

@@ -74,7 +74,9 @@ export class CategoryModalComponent implements OnInit {
   async onNewCategorySubmit() {
     const { name, color } = this.categoryForm.value
 
-    const loading = await this.$loading.show('Añadiendo categoría...')
+    const loading = await this.$loading.show(
+      `${this.category ? 'Guardando' : 'Añadiendo'} categoría...`,
+    )
 
     try {
       let addedCategory: RxDocument<ITaskCategory> | undefined
@@ -108,6 +110,25 @@ export class CategoryModalComponent implements OnInit {
       await this.$toast.error(
         `Ocurrió un error al ${this.category ? 'guardar' : 'añadir'} la categoría`,
       )
+    }
+  }
+
+  async removeCategory() {
+    const loading = await this.$loading.show('Eliminando categoría...')
+
+    try {
+      await this.category?.incrementalRemove()
+      await loading.dismiss()
+
+      await this.$toast.success('Categoría eliminada')
+      await this.dismiss()
+    } catch (error) {
+      if (isDevMode()) {
+        console.error(error)
+      }
+
+      await loading.dismiss()
+      await this.$toast.error('Ocurrió un error al eliminar la categoría')
     }
   }
 
