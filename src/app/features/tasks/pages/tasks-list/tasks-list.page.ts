@@ -26,6 +26,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling'
 import { type ITask, type ITaskCategory } from 'src/db'
 import { ModalService } from 'src/app/shared/services/modal.service'
 import { TasksStoreService } from '../../services/tasks-store.service'
+import { TaskActionsService } from '../../services/task-actions.service'
 import { TaskCategoriesStoreService } from 'src/app/features/task-categories/services/task-categories-store.service'
 
 @Component({
@@ -59,6 +60,7 @@ export class TasksListPage {
   private $modal = inject(ModalService)
 
   private $tasksStore = inject(TasksStoreService)
+  private $taskActions = inject(TaskActionsService)
   private $taskCategoriesStore = inject(TaskCategoriesStoreService)
 
   tasks$ = this.$tasksStore.getAll()
@@ -85,10 +87,6 @@ export class TasksListPage {
     )
   }
 
-  log() {
-    console.log('Cliccking')
-  }
-
   toggleTaskDone(task: RxDocument<ITask>, event: MouseEvent) {
     event.stopPropagation()
 
@@ -98,6 +96,6 @@ export class TasksListPage {
   }
 
   removeTask(task: RxDocument<ITask>) {
-    return task.remove()
+    return this.$taskActions.removeTask(task)
   }
 }
