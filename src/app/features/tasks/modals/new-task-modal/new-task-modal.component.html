@@ -12,7 +12,7 @@
 
 <ion-content>
   <form [formGroup]="taskForm" (ngSubmit)="onNewTaskSubmit()">
-    <ion-list>
+    <ion-list class="form-list">
       <ion-item>
         <ion-input
           label="Nombre *"
@@ -26,10 +26,11 @@
           label="Categoría"
           placeholder="Selecciona una categoría"
           formControlName="category"
+          interface="action-sheet"
         >
           <ion-select-option
             *ngFor="let category of categories$ | async"
-            [value]="category"
+            [value]="category.id"
           >
             {{ category.name }}
           </ion-select-option>

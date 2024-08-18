@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Nueva categoría</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="categoryForm" (ngSubmit)="onNewCategorySubmit()">
+    <ion-list class="form-list">
+      <ion-item>
+        <ion-input
+          label="Nombre *"
+          type="text"
+          formControlName="name"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Color</ion-label>
+        <input type="color" formControlName="color" slot="end" />
+      </ion-item>
+
+      <ion-item>
+        <ion-button
+          type="submit"
+          shape="round"
+          size="default"
+          class="submit-btn"
+        >
+          Añadir categoría
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>
