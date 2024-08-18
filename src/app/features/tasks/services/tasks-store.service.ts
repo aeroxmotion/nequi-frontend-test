@@ -1,12 +1,7 @@
 import { mergeMap } from 'rxjs'
 import { Injectable } from '@angular/core'
 
-import {
-  type ITask,
-  DB_OBSERVABLE,
-  withGeneratedID,
-  type ITaskCategory,
-} from 'src/db'
+import { type ITask, DB_OBSERVABLE, withGeneratedID } from 'src/db'
 
 @Injectable({
   providedIn: 'root',
@@ -14,21 +9,6 @@ import {
 export class TasksStoreService {
   getAll() {
     return DB_OBSERVABLE.pipe(mergeMap((db) => db.tasks.find().$))
-  }
-
-  getByCategories(categoryIDs: ITaskCategory['id'][]) {
-    return DB_OBSERVABLE.pipe(
-      mergeMap(
-        (db) =>
-          db.tasks.findOne({
-            selector: {
-              category: {
-                $in: categoryIDs,
-              },
-            },
-          }).$,
-      ),
-    )
   }
 
   add(task: ITask) {

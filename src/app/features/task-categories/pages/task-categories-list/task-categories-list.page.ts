@@ -23,6 +23,7 @@ import { TaskCategoriesStoreService } from '../../services/task-categories-store
 import { ModalService } from 'src/app/shared/services/modal.service'
 import { RxDocument } from 'rxdb'
 import { ITaskCategory } from 'src/db'
+import { TaskCategoryActionsService } from '../../services/task-category-actions.service'
 
 @Component({
   selector: 'app-task-categories-list',
@@ -54,6 +55,7 @@ export class TaskCategoriesListPage {
   private $modal = inject(ModalService)
 
   private $taskCategoriesStore = inject(TaskCategoriesStoreService)
+  private $taskCategoryActions = inject(TaskCategoryActionsService)
 
   taskCategories$ = this.$taskCategoriesStore.getAll()
 
@@ -66,5 +68,9 @@ export class TaskCategoriesListPage {
         category,
       },
     )
+  }
+
+  removeCategory(category: RxDocument<ITaskCategory>) {
+    return this.$taskCategoryActions.removeCategory(category)
   }
 }

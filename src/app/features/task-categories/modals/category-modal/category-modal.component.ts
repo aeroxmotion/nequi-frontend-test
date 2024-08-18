@@ -87,7 +87,9 @@ export class CategoryModalComponent implements OnInit {
   }
 
   async removeCategory() {
-    return this.$taskCategoryActions.removeCategory(this.category!)
+    await this.$taskCategoryActions.removeCategory(this.category!)
+
+    return this.dismiss()
   }
 
   dismiss(addedCategory?: ITaskCategory) {
