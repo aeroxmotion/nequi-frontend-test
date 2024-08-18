@@ -18,6 +18,17 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div class="category-selector">
+    <ion-chip
+      *ngFor="let category of taskCategories$ | async"
+      [outline]="selectedCategory !== category.id"
+      [style.--background]="selectedCategory === category.id ? category.color : ''"
+      (click)="filterByCategory(category.id!)"
+    >
+      {{ category.name }}
+    </ion-chip>
+  </div>
+
   <cdk-virtual-scroll-viewport
     itemSize="56.5"
     minBufferPx="1000"

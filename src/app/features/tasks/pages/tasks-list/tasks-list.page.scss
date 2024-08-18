@@ -16,3 +16,11 @@ ion-badge {
   font-weight: 400;
   text-overflow: ellipsis;
 }
+
+.category-selector {
+  padding: 0.5rem;
+
+  overflow-x: auto;
+
+  white-space: nowrap;
+}

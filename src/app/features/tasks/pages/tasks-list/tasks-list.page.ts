@@ -18,6 +18,7 @@ import {
   IonItemOptions,
   IonItemOption,
   IonBadge,
+  IonChip,
 } from '@ionic/angular/standalone'
 import { map } from 'rxjs'
 import { type RxDocument } from 'rxdb'
@@ -55,6 +56,7 @@ import { FeatureFlagsService } from 'src/app/shared/services/feature-flags.servi
     IonItemOptions,
     IonItemOption,
     IonBadge,
+    IonChip,
   ],
 })
 export class TasksListPage {
@@ -64,6 +66,8 @@ export class TasksListPage {
   private $tasksStore = inject(TasksStoreService)
   private $taskActions = inject(TaskActionsService)
   private $taskCategoriesStore = inject(TaskCategoriesStoreService)
+
+  withTaskCategories$ = this.$featureFlags.withBoolean$('task_categories')
 
   tasks$ = this.$tasksStore.getAll()
 
@@ -80,7 +84,7 @@ export class TasksListPage {
     ),
   )
 
-  withTaskCategories$ = this.$featureFlags.withBoolean$('task_categories')
+  selectedCategory: ITaskCategory['id'] = ''
 
   openTaskModal(task?: RxDocument<ITask>) {
     return this.$modal.showLazy(
@@ -97,6 +101,16 @@ export class TasksListPage {
     return task.incrementalPatch({
       done: !task.done,
     })
+  }
+
+  filterByCategory(categoryID: NonNullable<ITaskCategory['id']>) {
+    if (this.selectedCategory === categoryID) {
+      this.selectedCategory = ''
+      this.tasks$ = this.$tasksStore.getAll()
+    } else {
+      this.selectedCategory = categoryID
+      this.tasks$ = this.$tasksStore.getAllByCategoryID(categoryID)
+    }
   }
 
   removeTask(task: RxDocument<ITask>) {
