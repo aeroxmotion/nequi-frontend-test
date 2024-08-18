@@ -7,7 +7,8 @@ Aplicación para la prueba frontend de Nequi.
 1. [Demo](#1-demo)
 2. [Instrucciones de instalación](#2-instrucciones-de-instalación)
 3. [Ejecución del proyecto](#3-ejecución-del-proyecto)
-4. [Descargables](#4-descargables)
+4. [Preguntas y respuestas](#4-preguntas-y-respuestas)
+5. [Descargables](#5-descargables)
 
 ## 1. Demo
 
@@ -56,7 +57,35 @@ Para ejecutar en iOS, correr:
 $ ionic capacitor run ios
 ```
 
-## 4. Descargables
+## 4. Preguntas y respuestas
+
+¿Cuáles fueron los principales desafíos que enfrentaste al implementar las nuevas funcionalidades?
+
+- Implementar `RxDB` para gestionar el almacenamiento de datos fue difícil, debido a su compleja,
+  y escasa (en cuanto a ejemplos) documentación. Como alternativa, hubiera implementado `Firebase`
+  en su modo offline, pero el enfoque de firebase no es `Offline-first`, así que descarté esa
+  posibilidad (ver [respuesta stackoverflow](https://stackoverflow.com/a/48871973/11992125)).
+
+¿Qué técnicas de optimización de rendimiento aplicaste y por qué?
+
+- Implementé `code-splitting`/`lazy-loading` sobre las páginas de tareas, categorías, y modales,
+  para que se carguen únicamente cuando sean visitados, y se disminuzca el tiempo de carga
+  inicial de la aplicación, así como el tamaño final de bundle principal.
+- Adicionalmente también implementé `virtualización` sobre el listado de tareas, para que
+  únicamente queden cargadas en el DOM las tareas que están en en el viewport.
+- Para el almacenamiento local (base de datos) utilicé `RxDB` junto con el plugin `Dexie.js`, que internamente usa `IndexedDB`
+  para poder manejar grandes cantidades de datos (`tareas`/`categorías`) de manera mucho más eficiente,
+  en comparación con alternativas como `localStorage`, que al ser síncronas, son mucho más lentas y bloquean
+  el hilo principal de ejecución de la aplicación.
+
+¿Cómo aseguraste la calidad y mantenibilidad del código?
+
+- Implementé reglas de `ESLint` y `Prettier` para mantener un código consistente en cuando a legibilidad
+  y mantenibilidad.
+- Implementé una arquitectura basada en `features`, para separar y categorizar el código por cada uno de
+  los distintos casos de uso de la aplicación.
+
+## 5. Descargables
 
 - [Android APK](https://github.com/aeroxmotion/nequi-frontend-test/raw/main/downloads/demo-todo-app-nequi.apk)
 - `iOS IPA`: Actualmente no cuento con una cuenta de desarrollador de Apple, para poder firmar el IPA y generarlo.
