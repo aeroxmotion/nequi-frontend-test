@@ -28,6 +28,7 @@ import { ModalService } from 'src/app/shared/services/modal.service'
 import { TasksStoreService } from '../../services/tasks-store.service'
 import { TaskActionsService } from '../../services/task-actions.service'
 import { TaskCategoriesStoreService } from 'src/app/features/task-categories/services/task-categories-store.service'
+import { FeatureFlagsService } from 'src/app/shared/services/feature-flags.service'
 
 @Component({
   selector: 'app-tasks-list',
@@ -58,6 +59,7 @@ import { TaskCategoriesStoreService } from 'src/app/features/task-categories/ser
 })
 export class TasksListPage {
   private $modal = inject(ModalService)
+  private $featureFlags = inject(FeatureFlagsService)
 
   private $tasksStore = inject(TasksStoreService)
   private $taskActions = inject(TaskActionsService)
@@ -77,6 +79,8 @@ export class TasksListPage {
       ),
     ),
   )
+
+  withTaskCategories$ = this.$featureFlags.withBoolean$('task_categories')
 
   openTaskModal(task?: RxDocument<ITask>) {
     return this.$modal.showLazy(

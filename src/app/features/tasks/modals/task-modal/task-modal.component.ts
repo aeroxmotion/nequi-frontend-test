@@ -1,4 +1,4 @@
-import { Component, inject, Input, isDevMode, type OnInit } from '@angular/core'
+import { Component, inject, Input, type OnInit } from '@angular/core'
 import {
   IonHeader,
   IonToolbar,
@@ -22,6 +22,7 @@ import { ITask, type ITaskCategory } from 'src/db'
 import { ModalService } from 'src/app/shared/services/modal.service'
 import { TaskCategoriesStoreService } from 'src/app/features/task-categories/services/task-categories-store.service'
 import { TaskActionsService } from '../../services/task-actions.service'
+import { FeatureFlagsService } from 'src/app/shared/services/feature-flags.service'
 
 @Component({
   standalone: true,
@@ -49,6 +50,7 @@ export class TaskModalComponent implements OnInit {
   @Input() task?: RxDocument<ITask>
 
   private $formBuilder = inject(FormBuilder)
+  private $featureFlags = inject(FeatureFlagsService)
 
   private $modal = inject(ModalService)
 
@@ -62,6 +64,8 @@ export class TaskModalComponent implements OnInit {
     name: ['', Validators.required],
     category: ['' as string | symbol],
   })
+
+  withTaskCategories$ = this.$featureFlags.withBoolean$('task_categories')
 
   ngOnInit() {
     if (this.task) {

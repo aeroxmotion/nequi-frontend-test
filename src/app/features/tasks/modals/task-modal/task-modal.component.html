@@ -22,7 +22,7 @@
         ></ion-textarea>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="withTaskCategories$ | async">
         <ion-select
           label="Categoría"
           placeholder="Selecciona una categoría"

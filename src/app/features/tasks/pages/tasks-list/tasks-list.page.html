@@ -38,13 +38,15 @@
             {{ task.name }}
           </ion-label>
 
-          <ion-badge
-            slot="end"
-            *ngIf="taskCategoryByID?.[task.category!] as category"
-            [style.--background]="category.color"
-          >
-            {{ category.name }}
-          </ion-badge>
+          <ng-container *ngIf="withTaskCategories$ | async">
+            <ion-badge
+              slot="end"
+              *ngIf="taskCategoryByID?.[task.category!] as category"
+              [style.--background]="category.color"
+            >
+              {{ category.name }}
+            </ion-badge>
+          </ng-container>
         </ion-item>
 
         <ion-item-options>
