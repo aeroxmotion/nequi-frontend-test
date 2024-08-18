@@ -32,7 +32,11 @@
             (click)="toggleTaskDone(task, $event)"
           ></ion-checkbox>
 
-          <ion-label> {{ task.name }} </ion-label>
+          <ion-label
+            [style.text-decoration]="task.done ? 'line-through' : 'none'"
+          >
+            {{ task.name }}
+          </ion-label>
 
           <ion-badge
             slot="end"

@@ -29,15 +29,16 @@
           formControlName="category"
           interface="action-sheet"
           cancelText="Cancelar"
+          [interfaceOptions]="{ header: 'Categoría' }"
         >
-          <ion-select-option value=""> Sin categoría </ion-select-option>
-
           <ion-select-option
             *ngFor="let category of categories$ | async"
             [value]="category.id"
           >
             {{ category.name }}
           </ion-select-option>
+
+          <ion-select-option value=""> Sin categoría </ion-select-option>
 
           <ion-select-option [value]="newCategorySymbol">
             Nueva categoría +

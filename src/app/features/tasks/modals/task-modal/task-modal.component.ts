@@ -13,17 +13,15 @@ import {
   IonSelectOption,
   IonTextarea,
 } from '@ionic/angular/standalone'
+import { RxDocument } from 'rxdb'
 import { CommonModule } from '@angular/common'
-import { firstValueFrom, pairwise, startWith } from 'rxjs'
+import { pairwise, startWith } from 'rxjs'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 
 import { ITask, type ITaskCategory } from 'src/db'
 import { ModalService } from 'src/app/shared/services/modal.service'
-import { ToastService } from 'src/app/shared/services/toast.service'
-import { TasksStoreService } from '../../services/tasks-store.service'
-import { LoadingService } from 'src/app/shared/services/loading.service'
 import { TaskCategoriesStoreService } from 'src/app/features/task-categories/services/task-categories-store.service'
-import { RxDocument } from 'rxdb'
+import { TaskActionsService } from '../../services/task-actions.service'
 
 @Component({
   standalone: true,
@@ -52,11 +50,9 @@ export class TaskModalComponent implements OnInit {
 
   private $formBuilder = inject(FormBuilder)
 
-  private $toast = inject(ToastService)
   private $modal = inject(ModalService)
-  private $loading = inject(LoadingService)
 
-  private $tasksStore = inject(TasksStoreService)
+  private $taskActions = inject(TaskActionsService)
   private $taskCategoriesStore = inject(TaskCategoriesStoreService)
 
   newCategorySymbol = Symbol()
@@ -81,54 +77,24 @@ export class TaskModalComponent implements OnInit {
   async onTaskSubmit() {
     const { name, category } = this.taskForm.value
 
-    const loading = await this.$loading.show(
-      `${this.task ? 'Guardando' : 'Añadiendo'} tarea...`,
-    )
-
-    try {
-      if (this.task) {
-        await this.task.incrementalPatch({
-          name: name!,
-          category: category ? (category as string) : void 0,
-        })
-      } else {
-        await firstValueFrom(
-          this.$tasksStore.add({
-            name: name!,
-            done: false,
-            category: category ? (category as string) : void 0,
-          }),
-        )
-      }
-
-      await loading.dismiss()
-      await this.dismiss()
-
-      await this.$toast.success(`Tarea ${this.task ? 'guardada' : 'añadida'}`)
-    } catch (error) {
-      if (isDevMode()) {
-        console.error(error)
-      }
-
-      await loading.dismiss()
-      await this.$toast.error('Ocurrió un error al añadir la tarea')
+    if (this.task) {
+      await this.$taskActions.saveTask(this.task, {
+        name: name!,
+        category: category as string,
+      })
+    } else {
+      await this.$taskActions.addTask({
+        name: name!,
+        done: false,
+        category: category as string,
+      })
     }
+
+    return this.dismiss()
   }
 
   async removeTask() {
-    const loading = await this.$loading.show('Eliminando tarea...')
-
-    try {
-      await this.task?.incrementalRemove()
-      await loading.dismiss()
-    } catch (error) {
-      if (isDevMode()) {
-        console.log(error)
-      }
-
-      await loading.dismiss()
-      await this.$toast.error('Ocurrió un error al guardar la tarea')
-    }
+    await this.$taskActions.removeTask(this.task!)
 
     return this.dismiss()
   }
