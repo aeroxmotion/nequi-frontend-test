@@ -1,3 +1,5 @@
+@let taskCategories = taskCategories$ | async;
+
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -17,7 +19,11 @@
 
 <ion-content [fullscreen]="true">
   <ion-list>
-    <ion-item-sliding *ngFor="let category of taskCategories$ | async">
+    <ion-item *ngIf="taskCategories && !taskCategories.length">
+      <ion-label> No se han encontrado categorías </ion-label>
+    </ion-item>
+
+    <ion-item-sliding *ngFor="let category of taskCategories">
       <ion-item [button]="true" (click)="openCategoryModal(category)">
         <div
           class="category-color"
