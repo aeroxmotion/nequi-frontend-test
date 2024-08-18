@@ -6,6 +6,7 @@ export interface ITask {
   id?: string
   name: string
   done: boolean
+  created_at?: number
   category?: ITaskCategory['id']
 }
 
@@ -29,6 +30,13 @@ export const TaskSchema: RxJsonSchema<ITask> = {
       ref: 'tasks_categories',
       type: 'string',
     },
+    created_at: {
+      minimum: 0,
+      maximum: 2_000_000_000_000,
+      type: 'number',
+      multipleOf: 1,
+    },
   },
+  indexes: ['created_at'],
   required: ['id', 'name', 'done'],
 }

@@ -8,7 +8,9 @@ import { type ITask, DB_OBSERVABLE, withGeneratedID } from 'src/db'
 })
 export class TasksStoreService {
   getAll() {
-    return DB_OBSERVABLE.pipe(mergeMap((db) => db.tasks.find().$))
+    return DB_OBSERVABLE.pipe(
+      mergeMap((db) => db.tasks.find({ sort: [{ created_at: 'desc' }] }).$),
+    )
   }
 
   add(task: ITask) {

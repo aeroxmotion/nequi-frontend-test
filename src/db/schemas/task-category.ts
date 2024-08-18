@@ -4,6 +4,7 @@ export interface ITaskCategory {
   id?: string
   name: string
   color: string
+  created_at?: number
 }
 
 export const TaskCategorySchema: RxJsonSchema<ITaskCategory> = {
@@ -22,6 +23,13 @@ export const TaskCategorySchema: RxJsonSchema<ITaskCategory> = {
     color: {
       type: 'string',
     },
+    created_at: {
+      minimum: 0,
+      maximum: 2_000_000_000_000,
+      type: 'number',
+      multipleOf: 1,
+    },
   },
+  indexes: ['created_at'],
   required: ['id', 'name', 'color'],
 }

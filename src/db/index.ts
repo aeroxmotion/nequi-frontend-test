@@ -21,7 +21,7 @@ async function createLocalDB() {
 
   const db = await createRxDatabase<DBCollections>({
     name: DB_NAME,
-    // eventReduce: true,
+    eventReduce: true,
     storage: getRxStorageDexie(),
   })
 

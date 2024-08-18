@@ -8,7 +8,11 @@ import { DB_OBSERVABLE, withGeneratedID, type ITaskCategory } from 'src/db'
 })
 export class TaskCategoriesStoreService {
   getAll() {
-    return DB_OBSERVABLE.pipe(mergeMap((db) => db.tasks_categories.find().$))
+    return DB_OBSERVABLE.pipe(
+      mergeMap(
+        (db) => db.tasks_categories.find({ sort: [{ created_at: 'desc' }] }).$,
+      ),
+    )
   }
 
   add(category: ITaskCategory) {
