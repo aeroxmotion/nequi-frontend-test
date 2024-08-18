@@ -1,3 +1,4 @@
+import { from, mergeMap, Observable } from 'rxjs'
 import { inject, Injectable } from '@angular/core'
 import {
   RemoteConfig,
@@ -11,6 +12,8 @@ import {
 export class FeatureFlagsService {
   private $remoteConfig = inject(RemoteConfig)
 
+  fetchAndActivate$: Observable<boolean>
+
   constructor() {
     this.$remoteConfig.defaultConfig = {
       task_categories: false,
@@ -18,11 +21,13 @@ export class FeatureFlagsService {
 
     this.$remoteConfig.settings.minimumFetchIntervalMillis = 5_000 // Each 5 seconds
 
-    fetchAndActivate(this.$remoteConfig)
+    this.fetchAndActivate$ = from(fetchAndActivate(this.$remoteConfig))
   }
 
   withBoolean$(feature: FeatureName) {
-    return getBooleanChanges(this.$remoteConfig, feature)
+    return this.fetchAndActivate$.pipe(
+      mergeMap(() => getBooleanChanges(this.$remoteConfig, feature)),
+    )
   }
 }
 
