@@ -59,3 +59,4 @@ $ ionic capacitor run ios
 ## 4. Descargables
 
 - [Android APK](https://github.com/aeroxmotion/nequi-frontend-test/raw/main/downloads/demo-todo-app-nequi.apk)
+- `iOS IPA`: Actualmente no cuento con una cuenta de desarrollador de Apple, para poder firmar el IPA y generarlo.
