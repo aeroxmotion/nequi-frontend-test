@@ -7,7 +7,7 @@
     <ion-title>Categorías</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button (click)="openCategoryModal()">
         <ion-icon name="add-outline" slot="start"></ion-icon>
         Nueva
       </ion-button>
@@ -18,7 +18,7 @@
 <ion-content [fullscreen]="true">
   <ion-list>
     <ion-item-sliding *ngFor="let category of taskCategories$ | async">
-      <ion-item [button]="true">
+      <ion-item [button]="true" (click)="openCategoryModal(category)">
         <div
           class="category-color"
           slot="start"

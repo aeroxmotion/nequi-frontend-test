@@ -82,7 +82,7 @@ export class TaskModalComponent implements OnInit {
     const { name, category } = this.taskForm.value
 
     const loading = await this.$loading.show(
-      `${this.task ? 'Editando' : 'Añadiendo'} tarea...`,
+      `${this.task ? 'Guardando' : 'Añadiendo'} tarea...`,
     )
 
     try {
@@ -152,8 +152,8 @@ export class TaskModalComponent implements OnInit {
 
         const modal = await this.$modal.showLazy(
           import(
-            '../../../task-categories/modals/new-category-modal/new-category-modal.component'
-          ).then((m) => m.NewCategoryModalComponent),
+            '../../../task-categories/modals/category-modal/category-modal.component'
+          ).then((m) => m.CategoryModalComponent),
         )
 
         const { data: addedCategory } = await modal.onDidDismiss<

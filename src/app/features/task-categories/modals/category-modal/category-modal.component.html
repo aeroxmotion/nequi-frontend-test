@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Nueva categoría</ion-title>
+    <ion-title>{{ category ? 'Editar' : 'Nueva' }} categoría</ion-title>
 
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
@@ -28,7 +28,7 @@
 
       <ion-item>
         <ion-button type="submit" shape="round" size="default" class="full-btn">
-          Añadir categoría
+          {{ category ? 'Guardar' : 'Añadir' }} categoría
         </ion-button>
       </ion-item>
     </ion-list>

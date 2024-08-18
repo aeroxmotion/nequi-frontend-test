@@ -1,4 +1,4 @@
-import { Component, inject, isDevMode } from '@angular/core'
+import { Component, inject, Input, isDevMode, type OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import {
@@ -14,6 +14,7 @@ import {
   IonIcon,
   IonLabel,
 } from '@ionic/angular/standalone'
+import { RxDocument } from 'rxdb'
 import { firstValueFrom } from 'rxjs'
 
 import { type ITaskCategory } from 'src/db'
@@ -25,9 +26,9 @@ import { TaskCategoriesStoreService } from '../../services/task-categories-store
 
 @Component({
   standalone: true,
-  selector: 'app-new-category-modal',
-  templateUrl: './new-category-modal.component.html',
-  styleUrls: ['./new-category-modal.component.scss'],
+  selector: 'app-category-modal',
+  templateUrl: './category-modal.component.html',
+  styleUrls: ['./category-modal.component.scss'],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -44,7 +45,9 @@ import { TaskCategoriesStoreService } from '../../services/task-categories-store
     IonLabel,
   ],
 })
-export class NewCategoryModalComponent {
+export class CategoryModalComponent implements OnInit {
+  @Input() category?: RxDocument<ITaskCategory>
+
   private $formBuilder = inject(FormBuilder)
 
   private $modal = inject(ModalService)
@@ -59,30 +62,52 @@ export class NewCategoryModalComponent {
     color: [this.$colorGenerator.generate(), Validators.required],
   })
 
+  ngOnInit() {
+    if (this.category) {
+      this.categoryForm.setValue({
+        name: this.category.name,
+        color: this.category.color,
+      })
+    }
+  }
+
   async onNewCategorySubmit() {
     const { name, color } = this.categoryForm.value
 
     const loading = await this.$loading.show('Añadiendo categoría...')
 
-    const addedCategory$ = this.$taskCategoriesStore.add({
-      name: name!,
-      color: color!,
-    })
-
     try {
-      const addedCategory = await firstValueFrom(addedCategory$)
+      let addedCategory: RxDocument<ITaskCategory> | undefined
+
+      if (this.category) {
+        await this.category.incrementalPatch({
+          name: name!,
+          color: color!,
+        })
+      } else {
+        addedCategory = await firstValueFrom(
+          this.$taskCategoriesStore.add({
+            name: name!,
+            color: color!,
+          }),
+        )
+      }
 
       await loading.dismiss()
       await this.dismiss(addedCategory)
 
-      await this.$toast.success('Categoría añadida')
+      await this.$toast.success(
+        `Categoría ${this.category ? 'guardada' : 'añadida'}`,
+      )
     } catch (error) {
       if (isDevMode()) {
         console.error(error)
       }
 
       await loading.dismiss()
-      await this.$toast.error('Ocurrió un error al añadir la categoría')
+      await this.$toast.error(
+        `Ocurrió un error al ${this.category ? 'guardar' : 'añadir'} la categoría`,
+      )
     }
   }
 
