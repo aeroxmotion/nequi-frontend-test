@@ -119,7 +119,7 @@ export class TaskModalComponent implements OnInit {
     const loading = await this.$loading.show('Eliminando tarea...')
 
     try {
-      await this.task?.remove()
+      await this.task?.incrementalRemove()
       await loading.dismiss()
     } catch (error) {
       if (isDevMode()) {
