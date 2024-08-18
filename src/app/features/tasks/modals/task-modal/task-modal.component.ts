@@ -1,4 +1,4 @@
-import { Component, inject, isDevMode, type OnInit } from '@angular/core'
+import { Component, inject, Input, isDevMode, type OnInit } from '@angular/core'
 import {
   IonHeader,
   IonToolbar,
@@ -8,27 +8,28 @@ import {
   IonContent,
   IonList,
   IonItem,
-  IonInput,
   IonIcon,
   IonSelect,
   IonSelectOption,
+  IonTextarea,
 } from '@ionic/angular/standalone'
 import { CommonModule } from '@angular/common'
 import { firstValueFrom, pairwise, startWith } from 'rxjs'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 
-import { type ITaskCategory } from 'src/db'
+import { ITask, type ITaskCategory } from 'src/db'
 import { ModalService } from 'src/app/shared/services/modal.service'
 import { ToastService } from 'src/app/shared/services/toast.service'
 import { TasksStoreService } from '../../services/tasks-store.service'
 import { LoadingService } from 'src/app/shared/services/loading.service'
 import { TaskCategoriesStoreService } from 'src/app/features/task-categories/services/task-categories-store.service'
+import { RxDocument } from 'rxdb'
 
 @Component({
   standalone: true,
-  selector: 'app-new-task-modal',
-  templateUrl: './new-task-modal.component.html',
-  styleUrls: ['./new-task-modal.component.scss'],
+  selector: 'app-task-modal',
+  templateUrl: './task-modal.component.html',
+  styleUrls: ['./task-modal.component.scss'],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -40,13 +41,15 @@ import { TaskCategoriesStoreService } from 'src/app/features/task-categories/ser
     IonContent,
     IonList,
     IonItem,
-    IonInput,
+    IonTextarea,
     IonIcon,
     IonSelect,
     IonSelectOption,
   ],
 })
-export class NewTaskModalComponent implements OnInit {
+export class TaskModalComponent implements OnInit {
+  @Input() task?: RxDocument<ITask>
+
   private $formBuilder = inject(FormBuilder)
 
   private $toast = inject(ToastService)
@@ -65,27 +68,43 @@ export class NewTaskModalComponent implements OnInit {
   })
 
   ngOnInit() {
+    if (this.task) {
+      this.taskForm.setValue({
+        name: this.task.name!,
+        category: this.task.category ?? '',
+      })
+    }
+
     this._listenCategoryChangesToOpenModal()
   }
 
-  async onNewTaskSubmit() {
+  async onTaskSubmit() {
     const { name, category } = this.taskForm.value
 
-    const loading = await this.$loading.show('Añadiendo tarea...')
-
-    const addedTask$ = this.$tasksStore.add({
-      name: name!,
-      done: false,
-      category: category ? (category as any) : void 0,
-    })
+    const loading = await this.$loading.show(
+      `${this.task ? 'Editando' : 'Añadiendo'} tarea...`,
+    )
 
     try {
-      await firstValueFrom(addedTask$)
+      if (this.task) {
+        await this.task.incrementalPatch({
+          name: name!,
+          category: category ? (category as string) : void 0,
+        })
+      } else {
+        await firstValueFrom(
+          this.$tasksStore.add({
+            name: name!,
+            done: false,
+            category: category ? (category as string) : void 0,
+          }),
+        )
+      }
 
       await loading.dismiss()
       await this.dismiss()
 
-      await this.$toast.success('Tarea añadida')
+      await this.$toast.success(`Tarea ${this.task ? 'guardada' : 'añadida'}`)
     } catch (error) {
       if (isDevMode()) {
         console.error(error)

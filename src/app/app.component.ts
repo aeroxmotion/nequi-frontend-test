@@ -34,6 +34,7 @@ import {
   bookmarkSharp,
   closeOutline,
   addOutline,
+  checkmarkOutline,
 } from 'ionicons/icons'
 
 @Component({
@@ -88,6 +89,7 @@ export class AppComponent {
       bookmarkSharp,
       closeOutline,
       addOutline,
+      checkmarkOutline,
     })
   }
 }

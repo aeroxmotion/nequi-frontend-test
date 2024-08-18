@@ -1,0 +1,19 @@
+cdk-virtual-scroll-viewport {
+  height: 100%;
+  width: 100%;
+}
+
+ion-checkbox {
+  padding-right: 0.5rem;
+  padding-block: 0.5rem;
+}
+
+ion-chip {
+  max-width: 100px;
+
+  ion-label {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}

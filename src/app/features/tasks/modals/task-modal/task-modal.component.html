@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Nueva tarea</ion-title>
+    <ion-title>{{ task ? 'Editar' : 'Nueva' }} tarea</ion-title>
 
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
@@ -11,14 +11,15 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="taskForm" (ngSubmit)="onNewTaskSubmit()">
+  <form [formGroup]="taskForm" (ngSubmit)="onTaskSubmit()">
     <ion-list class="form-list">
       <ion-item>
-        <ion-input
+        <ion-textarea
           label="Nombre *"
-          type="text"
+          labelPlacement="floating"
           formControlName="name"
-        ></ion-input>
+          [autoGrow]="true"
+        ></ion-textarea>
       </ion-item>
 
       <ion-item>
@@ -29,6 +30,8 @@
           interface="action-sheet"
           cancelText="Cancelar"
         >
+          <ion-select-option value=""> Sin categoría </ion-select-option>
+
           <ion-select-option
             *ngFor="let category of categories$ | async"
             [value]="category.id"
@@ -49,7 +52,7 @@
           size="default"
           class="submit-btn"
         >
-          Añadir tarea
+          {{ task ? 'Guardar' : 'Añadir' }} tarea
         </ion-button>
       </ion-item>
     </ion-list>

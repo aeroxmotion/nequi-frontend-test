@@ -1,6 +1,6 @@
-import { type ComponentRef } from '@ionic/core'
 import { inject, Injectable } from '@angular/core'
 import { ModalController } from '@ionic/angular/standalone'
+import { type ComponentRef, type ComponentProps } from '@ionic/core'
 
 @Injectable({
   providedIn: 'root',
@@ -8,9 +8,13 @@ import { ModalController } from '@ionic/angular/standalone'
 export class ModalService {
   private $modalCtrl = inject(ModalController)
 
-  async showLazy(lazyComponentPromise: Promise<ComponentRef>) {
+  async showLazy<T extends ComponentRef>(
+    lazyComponentPromise: Promise<T>,
+    componentProps?: ComponentProps<T>,
+  ) {
     const modal = await this.$modalCtrl.create({
       component: await lazyComponentPromise,
+      componentProps,
     })
 
     await modal.present()

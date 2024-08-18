@@ -1,3 +1,5 @@
+@let taskCategoryByID = taskCategoryByID$ | async;
+
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -7,7 +9,7 @@
     <ion-title>Tareas</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button (click)="openNewTaskModal()">
+      <ion-button (click)="openTaskModal()">
         <ion-icon name="add-outline" slot="start"></ion-icon>
         Nueva
       </ion-button>
@@ -16,14 +18,37 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-item *ngFor="let task of tasks$ | async">
-      <ion-label>
-        <h3>{{ task.name }}</h3>
-        <p *ngIf="cachedCategories[task.category!]; let category">
-          {{ category.name }}
-        </p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <cdk-virtual-scroll-viewport
+    itemSize="56.5"
+    minBufferPx="1000"
+    maxBufferPx="2000"
+  >
+    <ion-list>
+      <ion-item-sliding *cdkVirtualFor="let task of tasks$ | async">
+        <ion-item [button]="true" (click)="openTaskModal(task)">
+          <ion-checkbox
+            slot="start"
+            [checked]="task.done"
+            (click)="toggleTaskDone(task, $event)"
+          ></ion-checkbox>
+
+          <ion-label> {{ task.name }} </ion-label>
+
+          <ion-chip
+            slot="end"
+            *ngIf="taskCategoryByID?.[task.category!] as category"
+            [style.--background]="category.color"
+          >
+            <ion-label>{{ category.name }}</ion-label>
+          </ion-chip>
+        </ion-item>
+
+        <ion-item-options>
+          <ion-item-option color="danger" (click)="removeTask(task)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </cdk-virtual-scroll-viewport>
 </ion-content>
