@@ -6,7 +6,7 @@ export interface ITask {
   id?: string
   name: string
   done: boolean
-  category?: ITaskCategory
+  category?: ITaskCategory['id']
 }
 
 export const TaskSchema: RxJsonSchema<ITask> = {
@@ -26,7 +26,7 @@ export const TaskSchema: RxJsonSchema<ITask> = {
       type: 'boolean',
     },
     category: {
-      ref: 'category',
+      ref: 'tasks_categories',
       type: 'string',
     },
   },
