@@ -4,10 +4,10 @@ Aplicación para la prueba frontend de Nequi.
 
 ## Índice de contenidos
 
-1. [Demo](#demo)
-2. [Instrucciones de instalación](#instrucciones-de-instalación)
-3. [Ejecución del proyecto](#ejecución-del-proyecto)
-4. [Descargables](#descargables)
+1. [Demo](#1-demo)
+2. [Instrucciones de instalación](#2-instrucciones-de-instalación)
+3. [Ejecución del proyecto](#3-ejecución-del-proyecto)
+4. [Descargables](#4-descargables)
 
 ## 1. Demo
 
