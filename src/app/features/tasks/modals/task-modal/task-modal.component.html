@@ -46,13 +46,23 @@
       </ion-item>
 
       <ion-item>
-        <ion-button
-          type="submit"
-          shape="round"
-          size="default"
-          class="submit-btn"
-        >
+        <ion-button type="submit" shape="round" size="default" class="full-btn">
           {{ task ? 'Guardar' : 'Añadir' }} tarea
+        </ion-button>
+      </ion-item>
+
+      <ion-item *ngIf="task">
+        <ion-button
+          (click)="removeTask()"
+          size="default"
+          shape="round"
+          color="danger"
+          fill="clear"
+          [style.width]="'100%'"
+        >
+          <ion-icon name="trash-outline" slot="end"></ion-icon>
+
+          Eliminar
         </ion-button>
       </ion-item>
     </ion-list>

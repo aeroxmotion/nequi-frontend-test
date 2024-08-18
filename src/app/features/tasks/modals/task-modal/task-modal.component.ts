@@ -115,6 +115,24 @@ export class TaskModalComponent implements OnInit {
     }
   }
 
+  async removeTask() {
+    const loading = await this.$loading.show('Eliminando tarea...')
+
+    try {
+      await this.task?.remove()
+      await loading.dismiss()
+    } catch (error) {
+      if (isDevMode()) {
+        console.log(error)
+      }
+
+      await loading.dismiss()
+      await this.$toast.error('Ocurrió un error al guardar la tarea')
+    }
+
+    return this.dismiss()
+  }
+
   dismiss() {
     return this.$modal.dismiss()
   }
