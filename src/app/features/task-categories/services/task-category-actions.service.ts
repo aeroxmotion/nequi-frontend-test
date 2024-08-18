@@ -4,6 +4,7 @@ import { inject, Injectable } from '@angular/core'
 
 import { type ITaskCategory } from 'src/db'
 import { ToastService } from 'src/app/shared/services/toast.service'
+import { ModalService } from 'src/app/shared/services/modal.service'
 import { LoadingService } from 'src/app/shared/services/loading.service'
 import { TaskCategoriesStoreService } from './task-categories-store.service'
 import { DevLoggerService } from 'src/app/shared/services/dev-logger.service'
@@ -13,6 +14,7 @@ import { DevLoggerService } from 'src/app/shared/services/dev-logger.service'
 })
 export class TaskCategoryActionsService {
   private $toast = inject(ToastService)
+  private $modal = inject(ModalService)
   private $loading = inject(LoadingService)
   private $devLogger = inject(DevLoggerService)
 
@@ -30,6 +32,7 @@ export class TaskCategoryActionsService {
       )
 
       await loading.dismiss()
+      await this.$modal.dismissIfActive(addedCategory)
       await this.$toast.success('Categoría añadida')
 
       return addedCategory
@@ -53,6 +56,7 @@ export class TaskCategoryActionsService {
       await category.incrementalPatch(data)
 
       await loading.dismiss()
+      await this.$modal.dismissIfActive()
       await this.$toast.success('Categoría guardada')
     } catch (error) {
       this.$devLogger.logError(error)
@@ -69,8 +73,9 @@ export class TaskCategoryActionsService {
 
     try {
       await category.incrementalRemove()
-      await loading.dismiss()
 
+      await loading.dismiss()
+      await this.$modal.dismissIfActive()
       await this.$toast.success('Categoría eliminada')
     } catch (error) {
       this.$devLogger.logError(error)

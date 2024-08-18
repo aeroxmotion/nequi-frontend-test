@@ -22,6 +22,14 @@ export class ModalService {
     return modal
   }
 
+  async dismissIfActive(...args: Parameters<ModalController['dismiss']>) {
+    if (await this.$modalCtrl.getTop()) {
+      return this.$modalCtrl.dismiss(...args)
+    }
+
+    return false
+  }
+
   dismiss(...args: Parameters<ModalController['dismiss']>) {
     return this.$modalCtrl.dismiss(...args)
   }

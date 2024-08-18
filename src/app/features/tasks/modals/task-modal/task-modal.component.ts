@@ -89,14 +89,10 @@ export class TaskModalComponent implements OnInit {
         category: category as string,
       })
     }
-
-    return this.dismiss()
   }
 
-  async removeTask() {
-    await this.$taskActions.removeTask(this.task!)
-
-    return this.dismiss()
+  removeTask() {
+    return this.$taskActions.removeTask(this.task!)
   }
 
   dismiss() {

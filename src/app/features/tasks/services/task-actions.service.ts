@@ -1,18 +1,20 @@
 import { RxDocument } from 'rxdb'
+import { firstValueFrom } from 'rxjs'
 import { inject, Injectable } from '@angular/core'
 
 import { type ITask } from 'src/db'
 import { TasksStoreService } from './tasks-store.service'
 import { ToastService } from 'src/app/shared/services/toast.service'
+import { ModalService } from 'src/app/shared/services/modal.service'
 import { LoadingService } from 'src/app/shared/services/loading.service'
 import { DevLoggerService } from 'src/app/shared/services/dev-logger.service'
-import { firstValueFrom } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskActionsService {
   private $toast = inject(ToastService)
+  private $modal = inject(ModalService)
   private $loading = inject(LoadingService)
   private $devLogger = inject(DevLoggerService)
 
@@ -31,6 +33,7 @@ export class TaskActionsService {
       )
 
       await loading.dismiss()
+      await this.$modal.dismissIfActive(addedTask)
       await this.$toast.success('Tarea añadida')
 
       return addedTask
@@ -51,6 +54,7 @@ export class TaskActionsService {
       await task.incrementalPatch(data)
 
       await loading.dismiss()
+      await this.$modal.dismissIfActive()
       await this.$toast.success('Tarea añadida')
     } catch (error) {
       this.$devLogger.logError(error)
@@ -69,6 +73,7 @@ export class TaskActionsService {
       await task.incrementalRemove()
 
       await loading.dismiss()
+      await this.$modal.dismissIfActive()
       await this.$toast.success('Tarea eliminada')
     } catch (error) {
       this.$devLogger.logError(error)

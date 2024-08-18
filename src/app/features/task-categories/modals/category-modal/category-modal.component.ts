@@ -74,22 +74,16 @@ export class CategoryModalComponent implements OnInit {
         name: name!,
         color: color!,
       })
-
-      return this.dismiss()
+    } else {
+      await this.$taskCategoryActions.addCategory({
+        name: name!,
+        color: color!,
+      })
     }
-
-    const addedCategory = await this.$taskCategoryActions.addCategory({
-      name: name!,
-      color: color!,
-    })
-
-    return this.dismiss(addedCategory)
   }
 
-  async removeCategory() {
-    await this.$taskCategoryActions.removeCategory(this.category!)
-
-    return this.dismiss()
+  removeCategory() {
+    return this.$taskCategoryActions.removeCategory(this.category!)
   }
 
   dismiss(addedCategory?: ITaskCategory) {
