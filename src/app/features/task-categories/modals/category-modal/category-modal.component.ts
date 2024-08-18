@@ -15,14 +15,11 @@ import {
   IonLabel,
 } from '@ionic/angular/standalone'
 import { RxDocument } from 'rxdb'
-import { firstValueFrom } from 'rxjs'
 
 import { type ITaskCategory } from 'src/db'
 import { ModalService } from 'src/app/shared/services/modal.service'
-import { ToastService } from 'src/app/shared/services/toast.service'
-import { LoadingService } from 'src/app/shared/services/loading.service'
 import { ColorGeneratorService } from 'src/app/shared/services/color-generator.service'
-import { TaskCategoriesStoreService } from '../../services/task-categories-store.service'
+import { TaskCategoryActionsService } from '../../services/task-category-actions.service'
 
 @Component({
   standalone: true,
@@ -51,11 +48,9 @@ export class CategoryModalComponent implements OnInit {
   private $formBuilder = inject(FormBuilder)
 
   private $modal = inject(ModalService)
-  private $toast = inject(ToastService)
-  private $loading = inject(LoadingService)
   private $colorGenerator = inject(ColorGeneratorService)
 
-  private $taskCategoriesStore = inject(TaskCategoriesStoreService)
+  private $taskCategoryActions = inject(TaskCategoryActionsService)
 
   categoryForm = this.$formBuilder.group({
     name: ['', Validators.required],
@@ -71,65 +66,28 @@ export class CategoryModalComponent implements OnInit {
     }
   }
 
-  async onNewCategorySubmit() {
+  async onCategorySubmit() {
     const { name, color } = this.categoryForm.value
 
-    const loading = await this.$loading.show(
-      `${this.category ? 'Guardando' : 'Añadiendo'} categoría...`,
-    )
+    if (this.category) {
+      await this.$taskCategoryActions.saveCategory(this.category, {
+        name: name!,
+        color: color!,
+      })
 
-    try {
-      let addedCategory: RxDocument<ITaskCategory> | undefined
-
-      if (this.category) {
-        await this.category.incrementalPatch({
-          name: name!,
-          color: color!,
-        })
-      } else {
-        addedCategory = await firstValueFrom(
-          this.$taskCategoriesStore.add({
-            name: name!,
-            color: color!,
-          }),
-        )
-      }
-
-      await loading.dismiss()
-      await this.dismiss(addedCategory)
-
-      await this.$toast.success(
-        `Categoría ${this.category ? 'guardada' : 'añadida'}`,
-      )
-    } catch (error) {
-      if (isDevMode()) {
-        console.error(error)
-      }
-
-      await loading.dismiss()
-      await this.$toast.error(
-        `Ocurrió un error al ${this.category ? 'guardar' : 'añadir'} la categoría`,
-      )
+      return this.dismiss()
     }
+
+    const addedCategory = await this.$taskCategoryActions.addCategory({
+      name: name!,
+      color: color!,
+    })
+
+    return this.dismiss(addedCategory)
   }
 
   async removeCategory() {
-    const loading = await this.$loading.show('Eliminando categoría...')
-
-    try {
-      await this.category?.incrementalRemove()
-      await loading.dismiss()
-
-      await this.$toast.success('Categoría eliminada')
-      await this.dismiss()
-    } catch (error) {
-      if (isDevMode()) {
-        console.error(error)
-      }
-
-      await loading.dismiss()
-      await this.$toast.error('Ocurrió un error al eliminar la categoría')
-    }
+    return this.$taskCategoryActions.removeCategory(this.category!)
   }
 
   dismiss(addedCategory?: ITaskCategory) {
