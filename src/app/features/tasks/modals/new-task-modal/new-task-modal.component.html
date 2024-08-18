@@ -27,6 +27,7 @@
           placeholder="Selecciona una categoría"
           formControlName="category"
           interface="action-sheet"
+          cancelText="Cancelar"
         >
           <ion-select-option
             *ngFor="let category of categories$ | async"

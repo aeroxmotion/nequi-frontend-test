@@ -13,10 +13,11 @@ import {
   IonSelect,
   IonSelectOption,
 } from '@ionic/angular/standalone'
-import { firstValueFrom } from 'rxjs'
 import { CommonModule } from '@angular/common'
+import { firstValueFrom, pairwise, startWith } from 'rxjs'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 
+import { type ITaskCategory } from 'src/db'
 import { ModalService } from 'src/app/shared/services/modal.service'
 import { ToastService } from 'src/app/shared/services/toast.service'
 import { TasksStoreService } from '../../services/tasks-store.service'
@@ -100,19 +101,31 @@ export class NewTaskModalComponent implements OnInit {
   }
 
   private _listenCategoryChangesToOpenModal() {
-    this.taskForm.controls.category.valueChanges.subscribe(async (value) => {
-      if (value !== this.newCategorySymbol) {
-        return
-      }
+    const { category: initialCategoryValue } = this.taskForm.value
 
-      // Reset to an empty category
-      this.taskForm.controls.category.setValue(null)
+    this.taskForm.controls.category.valueChanges
+      .pipe(startWith(initialCategoryValue!), pairwise())
+      .subscribe(async ([prev, value]) => {
+        if (value !== this.newCategorySymbol) {
+          return
+        }
 
-      await this.$modal.showLazy(
-        import(
-          '../../../task-categories/modals/new-category-modal/new-category-modal.component'
-        ).then((m) => m.NewCategoryModalComponent),
-      )
-    })
+        // Reset to a previous selected category
+        this.taskForm.controls.category.setValue(prev)
+
+        const modal = await this.$modal.showLazy(
+          import(
+            '../../../task-categories/modals/new-category-modal/new-category-modal.component'
+          ).then((m) => m.NewCategoryModalComponent),
+        )
+
+        const { data: addedCategory } = await modal.onDidDismiss<
+          ITaskCategory | undefined
+        >()
+
+        if (addedCategory) {
+          this.taskForm.controls.category.setValue(addedCategory.id!)
+        }
+      })
   }
 }
