@@ -59,7 +59,7 @@ import {
 export class AppComponent {
   public appPages = [
     { title: 'Tareas', url: '/tasks', icon: 'checkmark-done' },
-    { title: 'Categorías', url: '/categories', icon: 'bookmarks' },
+    { title: 'Categorías', url: '/task-categories', icon: 'bookmarks' },
   ]
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders']
   constructor() {

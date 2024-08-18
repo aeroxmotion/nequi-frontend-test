@@ -13,4 +13,11 @@ export const routes: Routes = [
         (m) => m.TasksListPage,
       ),
   },
+  {
+    path: 'task-categories',
+    loadComponent: () =>
+      import(
+        './features/task-categories/pages/task-categories-list/task-categories-list.page'
+      ).then((m) => m.TaskCategoriesListPage),
+  },
 ]

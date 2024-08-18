@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Categorías</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        Nueva
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-item-sliding *ngFor="let category of taskCategories$ | async">
+      <ion-item [button]="true">
+        <div
+          class="category-color"
+          slot="start"
+          [style.background-color]="category.color"
+        ></div>
+
+        <ion-label> {{ category.name }} </ion-label>
+      </ion-item>
+
+      <ion-item-options>
+        <ion-item-option color="danger" (click)="category.remove()">
+          <ion-icon
+            slot="icon-only"
+            ios="trash-outline"
+            md="trash-sharp"
+          ></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

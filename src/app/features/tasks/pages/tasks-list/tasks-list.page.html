@@ -34,18 +34,22 @@
 
           <ion-label> {{ task.name }} </ion-label>
 
-          <ion-chip
+          <ion-badge
             slot="end"
             *ngIf="taskCategoryByID?.[task.category!] as category"
             [style.--background]="category.color"
           >
-            <ion-label>{{ category.name }}</ion-label>
-          </ion-chip>
+            {{ category.name }}
+          </ion-badge>
         </ion-item>
 
         <ion-item-options>
           <ion-item-option color="danger" (click)="removeTask(task)">
-            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            <ion-icon
+              slot="icon-only"
+              ios="trash-outline"
+              md="trash-sharp"
+            ></ion-icon>
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>

@@ -13,11 +13,11 @@ import {
   IonLabel,
   IonButton,
   IonIcon,
-  IonChip,
   IonCheckbox,
   IonItemSliding,
   IonItemOptions,
   IonItemOption,
+  IonBadge,
 } from '@ionic/angular/standalone'
 import { map } from 'rxjs'
 import { type RxDocument } from 'rxdb'
@@ -48,11 +48,11 @@ import { TaskCategoriesStoreService } from 'src/app/features/task-categories/ser
     IonButton,
     IonIcon,
     ScrollingModule,
-    IonChip,
     IonCheckbox,
     IonItemSliding,
     IonItemOptions,
     IonItemOption,
+    IonBadge,
   ],
 })
 export class TasksListPage {
