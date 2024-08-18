@@ -4,7 +4,7 @@
 
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
-        <ion-icon name="close-outline"></ion-icon>
+        <ion-icon ios="close-outline" md="close-sharp"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -60,7 +60,11 @@
           fill="clear"
           [style.width]="'100%'"
         >
-          <ion-icon name="trash-outline" slot="end"></ion-icon>
+          <ion-icon
+            ios="trash-outline"
+            android="trash-sharp"
+            slot="end"
+          ></ion-icon>
 
           Eliminar
         </ion-button>
